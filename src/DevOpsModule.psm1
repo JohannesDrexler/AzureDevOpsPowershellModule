@@ -86,3 +86,4 @@ function Get-DevOpsResponse
 
 #include functions
 ."$PSScriptRoot\DistributedTasks.ps1"
+."$PSScriptRoot\Projects.ps1"
