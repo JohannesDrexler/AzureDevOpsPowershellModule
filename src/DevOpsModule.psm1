@@ -10,6 +10,33 @@ class DevOpsConnection
     }
 }
 
+function Get-DevOpsConnection
+{
+    [cmdletbinding()]
+    param()
+
+    if(!$global:connection)
+    {
+        Write-Error "No connection set. Use 'Enter-DevOpsConnection' to set a connection."
+    }
+    else
+    {
+        Write-Output $global:connection
+    }
+}
+
+function Remove-DevOpsConnection
+{
+    [cmdletbinding()]
+    param()
+
+    if(Get-DevOpsConnection -ErrorAction Ignore)
+    {
+        Remove-Variable -Name "connection" -Scope "global"
+        Write-Host "Removed connection"
+    }
+}
+
 function Enter-DevOpsConnection
 {
     [cmdletbinding()]
