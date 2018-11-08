@@ -64,7 +64,11 @@ function Get-DevOpsResponse
     param
     (
         [parameter(Mandatory=$true)]
-        [string]$Url
+        [string]$Url,
+
+        [ValidateSet("GET","DELETE","PUT")]
+        [parameter(Mandatory=$false)]
+        [string]$method = "GET"
     )
 
     $erroractionpreference = "stop"
@@ -73,7 +77,7 @@ function Get-DevOpsResponse
 
     $finalUrl = $connection.InstanceUrl + $Url
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$connection.Token)))
-    $result = Invoke-RestMethod -Uri $finalUrl -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+    $result = Invoke-RestMethod -Uri $finalUrl -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method $method
     if($result.GetType() -eq [string])
     {
         $result = ConvertFrom-JsonNewtonsoft -string $result
