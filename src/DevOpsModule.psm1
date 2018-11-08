@@ -30,7 +30,7 @@ function Remove-DevOpsConnection
     [cmdletbinding()]
     param()
 
-    if(Get-DevOpsConnection -ErrorAction Ignore)
+    if(Get-DevOpsConnection -ErrorAction SilentlyContinue)
     {
         Remove-Variable -Name "connection" -Scope "global"
         Write-Host "Removed connection"
@@ -69,13 +69,10 @@ function Get-DevOpsResponse
 
     $erroractionpreference = "stop"
 
-    if(!$global:connection)
-    {
-        Write-Error "No connection found. Use 'Enter-DevOpsConnection' to enter your connection"
-    }
+    $connection = Get-DevOpsConnection
 
-    $finalUrl = $global:connection.InstanceUrl + $Url
-    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$global:connection.Token)))
+    $finalUrl = $connection.InstanceUrl + $Url
+    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$connection.Token)))
     $result = Invoke-RestMethod -Uri $finalUrl -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
     if($result.GetType() -eq [string])
     {
@@ -85,5 +82,6 @@ function Get-DevOpsResponse
 }
 
 #include functions
+."$PSScriptRoot\Builds.ps1"
 ."$PSScriptRoot\DistributedTasks.ps1"
 ."$PSScriptRoot\Projects.ps1"
