@@ -16,7 +16,7 @@ function Remove-DistributedTask
         [System.Guid]$taskId
     )
 
-    $result = Get-DevOpsResponse -Url "/_apis/distributedtask/tasks/$($taskId)?api-version=4.1" -method DELETE
+    Get-DevOpsResponse -Url "/_apis/distributedtask/tasks/$($taskId)?api-version=4.1" -method DELETE | Out-Null
 }
 
 #TODO: Get-TaskGroups (projectNameOrId)
