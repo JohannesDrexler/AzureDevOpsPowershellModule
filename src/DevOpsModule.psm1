@@ -58,6 +58,34 @@ function Enter-DevOpsConnection
     $global:connection = $connection
 }
 
+function Export-DevOpsConnection
+{
+    [cmdletbinding()]
+    param()
+
+    $connection = Get-DevOpsConnection
+    $content = "$($connection.InstanceUrl)|$($connection.token)"
+    $content | Set-Content -Path (Join-Path $env:TMP "DevOpsToken.txt")
+}
+
+function Import-DevOpsConnection
+{
+    [cmdletbinding()]
+    param()
+
+    $contentPath = Join-Path $env:TMP "DevOpsToken.txt"
+    if(test-path $contentPath)
+    {
+        [string]$content = Get-Content $contentPath -Raw
+        $contentSplits = $content.Split('|')
+        Enter-DevOpsConnection -InstanceUrl $contentSplits[0] -Token $contentSplits[1]
+    }
+    else
+    {
+        Write-Warning "Unable to import DevOpsConnection"
+    }
+}
+
 function Get-DevOpsResponse
 {
     [cmdletbinding()]
