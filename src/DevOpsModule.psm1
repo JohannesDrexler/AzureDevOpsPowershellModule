@@ -65,7 +65,8 @@ function Export-DevOpsConnection
 
     $connection = Get-DevOpsConnection
     $content = "$($connection.InstanceUrl)|$($connection.token)"
-    $content | Set-Content -Path (Join-Path $env:TMP "DevOpsToken.txt")
+    $contentPath = Get-DevOpsConnectionExportFileLocation
+    $content | Set-Content -Path $contentPath
 }
 
 function Import-DevOpsConnection
@@ -73,7 +74,7 @@ function Import-DevOpsConnection
     [cmdletbinding()]
     param()
 
-    $contentPath = Join-Path $env:TMP "DevOpsToken.txt"
+    $contentPath = Get-DevOpsConnectionExportFileLocation
     if(test-path $contentPath)
     {
         [string]$content = Get-Content $contentPath -Raw
@@ -84,6 +85,19 @@ function Import-DevOpsConnection
     {
         Write-Warning "Unable to import DevOpsConnection"
     }
+}
+
+function Get-DevOpsConnectionExportFileLocation
+{
+    [cmdletbinding()]
+    param()
+
+    if([System.Environment]::OSVersion.Platform -notin ([System.PlatformID]::Win32NT,[System.PlatformID]::Win32S,[System.PlatformID]::WinCE,[System.PlatformID]::Win32Windows))
+    {
+        Write-Warning "This command has only been tested on windows10, it may fail on another system that is not windows"
+    }
+
+    write-output (join-path $env:localappdata "DevOpsToken.txt")
 }
 
 function Get-DevOpsResponse
