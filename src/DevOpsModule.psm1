@@ -113,7 +113,7 @@ function Get-DevOpsResponse
         [string]$method = "GET",
 
         [parameter(Mandatory=$false)]
-        [stirng]$apiVersion = "5.0"
+        [string]$apiVersion = "5.0"
     )
 
     $erroractionpreference = "stop"
