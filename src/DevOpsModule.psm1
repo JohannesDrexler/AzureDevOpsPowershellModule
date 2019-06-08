@@ -110,12 +110,26 @@ function Get-DevOpsResponse
 
         [ValidateSet("GET","DELETE","PUT")]
         [parameter(Mandatory=$false)]
-        [string]$method = "GET"
+        [string]$method = "GET",
+
+        [parameter(Mandatory=$false)]
+        [stirng]$apiVersion = "5.0"
     )
 
     $erroractionpreference = "stop"
 
     $connection = Get-DevOpsConnection
+
+    #append api-version to url
+    if(!$url.Contains("api-version"))
+    {
+        if(!$url.Contains("?")){
+            $url+="?api-version=$apiVersion"
+        }
+        else{
+            $url+="&api-version=$apiVersion"
+        }
+    }
 
     $finalUrl = $connection.InstanceUrl + $Url
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$connection.Token)))
