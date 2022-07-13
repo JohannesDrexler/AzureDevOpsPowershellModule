@@ -1,6 +1,8 @@
 [cmdletbinding()]
 param()
 
+$ErrorActionPreference = "Stop"
+
 remove-module DevOpsModule -ErrorAction Ignore
 import-module .\src\DevOpsModule.psd1
 
