@@ -1,0 +1,16 @@
+
+NAME
+    Get-ProjectProperties
+    
+SYNTAX
+    Get-ProjectProperties [-projectId] <guid> [<CommonParameters>]
+    
+
+ALIASES
+    None
+    
+
+REMARKS
+    None
+
+
