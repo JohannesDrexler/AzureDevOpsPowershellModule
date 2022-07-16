@@ -3,7 +3,7 @@ class DevOpsConnection
     [string]$InstanceUrl
     [string]$Token
 
-    DevOpsConnection($InstanceUrl,$Token)
+    DevOpsConnection($InstanceUrl, $Token)
     {
         $this.InstanceUrl = $InstanceUrl
         $this.Token = $Token
@@ -15,7 +15,7 @@ function Get-DevOpsConnection
     [cmdletbinding()]
     param()
 
-    if(!$global:connection)
+    if (!$global:connection)
     {
         Write-Error "No connection set. Use 'Enter-DevOpsConnection' to set a connection."
     }
@@ -30,7 +30,7 @@ function Remove-DevOpsConnection
     [cmdletbinding()]
     param()
 
-    if(Get-DevOpsConnection -ErrorAction SilentlyContinue)
+    if (Get-DevOpsConnection -ErrorAction SilentlyContinue)
     {
         Remove-Variable -Name "connection" -Scope "global"
         Write-Host "Removed connection"
@@ -49,7 +49,7 @@ function Enter-DevOpsConnection
         [string]$Token
     )
 
-    if($global:connection)
+    if ($global:connection)
     {
         Write-Warning "There is already a connection set. Overwriting it now"
     }
@@ -75,7 +75,8 @@ function Import-DevOpsConnection
     param()
 
     $contentPath = Get-DevOpsConnectionExportFileLocation
-    if(test-path $contentPath)
+
+    if (test-path $contentPath)
     {
         [string]$content = Get-Content $contentPath -Raw
         $contentSplits = $content.Split('|')
@@ -92,7 +93,7 @@ function Get-DevOpsConnectionExportFileLocation
     [cmdletbinding()]
     param()
 
-    if([System.Environment]::OSVersion.Platform -notin ([System.PlatformID]::Win32NT,[System.PlatformID]::Win32S,[System.PlatformID]::WinCE,[System.PlatformID]::Win32Windows))
+    if ([System.Environment]::OSVersion.Platform -notin ([System.PlatformID]::Win32NT,[System.PlatformID]::Win32S,[System.PlatformID]::WinCE,[System.PlatformID]::Win32Windows))
     {
         Write-Warning "This command has only been tested on windows10, it may fail on another system that is not windows"
     }
@@ -113,25 +114,28 @@ function Get-DevOpsResponse
         [string]$method = "GET",
 
         [parameter(Mandatory=$false)]
-        [string]$apiVersion = "5.0"
+        [string]$apiVersion = "6.0"
     )
 
     $erroractionpreference = "stop"
 
     $connection = Get-DevOpsConnection
 
-    #append api-version to url
-    if(!$url.Contains("api-version"))
+    # Append api-version to url
+    if (!$url.Contains("api-version"))
     {
-        if(!$url.Contains("?")){
+        if( !$url.Contains("?"))
+        {
             $url+="?api-version=$apiVersion"
         }
-        else{
+        else
+        {
             $url+="&api-version=$apiVersion"
         }
     }
 
     $finalUrl = $connection.InstanceUrl + $Url
+    Write-Verbose "RequestUrl -> $finalUrl"
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$connection.Token)))
     $result = Invoke-RestMethod -Uri $finalUrl -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method $method
     if($result.GetType() -eq [string])
