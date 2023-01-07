@@ -58,49 +58,6 @@ function Enter-DevOpsConnection
     $global:connection = $connection
 }
 
-function Export-DevOpsConnection
-{
-    [cmdletbinding()]
-    param()
-
-    $connection = Get-DevOpsConnection
-    $content = "$($connection.InstanceUrl)|$($connection.token)"
-    $contentPath = Get-DevOpsConnectionExportFileLocation
-    $content | Set-Content -Path $contentPath
-}
-
-function Import-DevOpsConnection
-{
-    [cmdletbinding()]
-    param()
-
-    $contentPath = Get-DevOpsConnectionExportFileLocation
-
-    if (test-path $contentPath)
-    {
-        [string]$content = Get-Content $contentPath -Raw
-        $contentSplits = $content.Split('|')
-        Enter-DevOpsConnection -InstanceUrl $contentSplits[0] -Token $contentSplits[1]
-    }
-    else
-    {
-        Write-Warning "Unable to import DevOpsConnection"
-    }
-}
-
-function Get-DevOpsConnectionExportFileLocation
-{
-    [cmdletbinding()]
-    param()
-
-    if ([System.Environment]::OSVersion.Platform -notin ([System.PlatformID]::Win32NT,[System.PlatformID]::Win32S,[System.PlatformID]::WinCE,[System.PlatformID]::Win32Windows))
-    {
-        Write-Warning "This command has only been tested on windows10, it may fail on another system that is not windows"
-    }
-
-    write-output (join-path $env:localappdata "DevOpsToken.txt")
-}
-
 function Get-DevOpsResponse
 {
     [cmdletbinding()]
