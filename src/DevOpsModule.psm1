@@ -106,3 +106,4 @@ function Get-DevOpsResponse
 ."$PSScriptRoot\Builds.ps1"
 ."$PSScriptRoot\DistributedTasks.ps1"
 ."$PSScriptRoot\Projects.ps1"
+."$PSScriptRoot\Git.ps1"
