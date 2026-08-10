@@ -97,7 +97,7 @@ function Get-DevOpsResponse
     $result = Invoke-RestMethod -Uri $finalUrl -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method $method
     if($result.GetType() -eq [string])
     {
-        $result = ConvertFrom-JsonNewtonsoft -string $result
+        $result = ConvertFrom-Json -InputObject $result
     }
     Write-Output $result
 }

@@ -10,12 +10,7 @@ CmdletsToExport = @()
 VariablesToExport = @()
 AliasesToExport = @()
 RootModule = 'DevOpsModule.psm1'
-RequiredModules = @(
-    @{
-        ModuleName = 'newtonsoft.json'
-        RequiredVersion = '1.0.2.201'
-    }
-)
+
 PrivateData = @{
     PSData = @{
         ProjectUri = 'https://github.com/JohannesDrexler/AzureDevOpsPowershellModule'
