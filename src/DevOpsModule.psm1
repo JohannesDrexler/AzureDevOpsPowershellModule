@@ -95,7 +95,8 @@ function Get-DevOpsResponse
     Write-Verbose "RequestUrl -> $finalUrl"
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$connection.Token)))
     $result = Invoke-RestMethod -Uri $finalUrl -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method $method
-    if($result.GetType() -eq [string])
+    
+    if ($result.GetType() -eq [string])
     {
         $result = ConvertFrom-JsonNewtonsoft -string $result
     }
