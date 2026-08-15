@@ -18,5 +18,3 @@ foreach($com in $commands.Keys)
         $helpContent | Out-File -FilePath ".\docs\commands\$com.txt"
     }
 }
-
-#test123
